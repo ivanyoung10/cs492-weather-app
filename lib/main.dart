@@ -45,12 +45,8 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _forecasts = forecasts;
       // Instead of just mapping the e.name, try to create a widget that shows all properties
-      _forecastsWidget = _forecasts.map((forecast) => buildForecastWidget(forecast)).toList();
+      _forecastsWidget = _forecasts.map((forecast) => ForecastWidget(forecast: forecast)).toList();
     });
-  }
-
-  Widget buildForecastWidget(Forecast forecast){
-    return Text(forecast.name);
   }
 
   @override
@@ -60,7 +56,33 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Column(children: _forecastsWidget),
+      body: Row(children: _forecastsWidget),
+    );
+  }
+}
+
+class ForecastWidget extends StatelessWidget {
+  const ForecastWidget({
+    super.key,
+    required this.forecast,
+  });
+
+  final Forecast forecast;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 300,
+      child: Column(
+        children: [
+          Text(forecast.name),
+          Text(forecast.shortForecast),
+          Text("${forecast.temperature}"),
+          Text(forecast.windSpeed),
+          Text(forecast.windDirection),
+          Text(forecast.isDaytime ? "Day": "Night")
+        ],
+      ),
     );
   }
 }
