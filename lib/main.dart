@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import './models/forecast.dart';
 
+import './models/locations.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -32,6 +34,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<Forecast> _forecasts = [];
+  Location? _location;
+  final myController = TextEditingController();
 
   @override
   void initState() {
@@ -40,12 +44,17 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _initForecasts() async {
-    List<Forecast> forecasts = await getForecastsByLocation(44.058, -121.315);
+
+    Location location = await getLocationFromString(myController.text);
+
+    List<Forecast> forecasts = await getForecastsByLocation(location.latitude, location.longitude);
+
     setState(() {
       _forecasts = forecasts;
+      _location = location;
     });
   }
-
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +62,14 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: SizedBox(width: double.infinity, child: ListView(scrollDirection: Axis.horizontal, children: _forecasts.map((forecast)=> ForecastWidget(forecast: forecast)).toList())),
+      body: Column(
+        children: [
+          Text(_location != null ? '${_location?.city}, ${_location?.state}, ${_location?.zip}': "No Location given"),
+          Row(children: _forecasts.map((forecast)=> ForecastWidget(forecast: forecast)).toList()),
+          TextField(controller: myController),
+          ElevatedButton(onPressed: _initForecasts, child: Text("Set Location"))
+        ],
+      ),
     );
   }
 }
