@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import './models/forecast.dart';
 import './models/location.dart';
 import './widgets/location.dart';
-import './widgets/forecasts.dart';
-import './widgets/detailed_forecast.dart';
+import './widgets/forecast.dart';
 
 // TODOS:
 // Use a TabBar to separate the location and weather into separate tabs
 // Use icons to represent each
 // Prevent tapping the weather tab unless a valid location is selected.
+
+// Extract the forecast stuff into a single widget
 
 void main() {
   runApp(const MyApp());
@@ -38,18 +39,26 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   List<Forecast> _forecasts = [];
   Forecast? _activeForecast;
   Location? _location;
+  late final TabController _tabController;
 
   @override
   void initState() {
-    _setLocationFromGps();
+    // _setLocationFromGps();
     super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.index = 1;
+    _tabController.addListener(() {
+      if (_location == null){
+        _tabController.index = 1;
+      }
+    });
   }
 
-  void _setActiveForecast(Forecast forecast) {
+  void _setActiveForecast(Forecast? forecast) {
     setState(() {
       _activeForecast = forecast;
     });
@@ -64,6 +73,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _setLocation(String locationString) async {
+    if (locationString == ''){
+      _location = null;
+    }
     Location? location = await getLocationFromString(locationString);
     _getForecasts(location);
     setState(() {
@@ -86,25 +98,34 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          Text(_location != null ? "${_location?.city}, ${_location?.state}" : "")
+        ],
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
+        bottom: TabBar(controller: _tabController, tabs: [
+          Tab(
+            text: "Forecast",
+            icon: Icon(Icons.sunny_snowing),
+          ),
+          Tab(text: "Location", icon: Icon(Icons.location_pin))
+        ]),
       ),
       body: SizedBox(
         height: double.infinity,
         width: 500,
-        child: Column(
+        child: TabBarView(
+          controller: _tabController,
           children: [
+            ForecastWidget(
+                forecasts: _forecasts,
+                activeForecast: _activeForecast,
+                setActiveForecast: _setActiveForecast),
             LocationWidget(
               location: _location,
               setLocation: _setLocation,
               setLocationFromGps: _setLocationFromGps,
             ),
-            SizedBox(
-              width: double.infinity,
-              height: 200,
-              child: ForecastsWidget(forecasts: _forecasts, setActiveForecast: _setActiveForecast,),
-            ),
-            DetailedForecast(activeForecast: _activeForecast)
           ],
         ),
       ),

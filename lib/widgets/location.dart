@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/location.dart';
 
 class LocationWidget extends StatefulWidget {
-  LocationWidget({
+  const LocationWidget({
     super.key,
     required Location? location,
     required this.setLocation,
@@ -48,6 +48,10 @@ class _LocationWidgetState extends State<LocationWidget> {
     
   }
 
+  void _clearLocation(){
+    widget.setLocation('');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -69,8 +73,10 @@ class _LocationWidgetState extends State<LocationWidget> {
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
                     onPressed: widget.setLocationFromGps,
-                    child: Text("Set Location from GPS")),
+                    child: Text("GPS")),
               ),
+              Padding(padding: const EdgeInsets.all(4.0),
+              child: ElevatedButton(onPressed: _clearLocation, child: Text("Clear Location")))
             ],
           ),
           Text(widget._location != null
