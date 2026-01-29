@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:weatherapp/providers/forecast_provider.dart';
 import 'package:weatherapp/providers/location_provider.dart';
 import 'package:weatherapp/widgets/forecast.dart';
 import './models/forecast.dart';
@@ -13,8 +14,12 @@ import './widgets/location.dart';
 // Update the location widget, so that you no longer need to pass the location or set functions
 
 void main() {
-  runApp(ChangeNotifierProvider(
-      create: (context) => LocationProvider(), child: const MyApp()));
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (context) => LocationProvider()),
+      ChangeNotifierProvider(create: (context) => ForecastProvider())],
+    child: const MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -112,9 +117,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           controller: _tabController,
           children: [
             ForecastWidget(
-                forecasts: _forecasts,
-                activeForecast: _activeForecast,
-                setActiveForecast: _setActiveForecast),
+                ForecastProvider(forecastProvider: )
             LocationWidget(locationProvider: _locationProvider),
           ],
         ),
