@@ -1,7 +1,14 @@
 # Assignment 5-2 Refactoring:
-- List refactoring ideas here (even impractical ones)
-- Try to come up with as many as possible
-- Try to complete as many as possible
+- unnesessary exclamation mark -- DONE
+- main.dart: refractor the location provider to out of the app bar widget 
+- Remove paddings calls in location.dart widget --DONE
+- Create subfolders of widget types --DONE
+- Remove comments in models/location.dart --DONE
+- Break out detailedForecast widget into smaller parts
+- Break out getAssetFromDetailedForecast -- DONE
+- Create padding around divider, instead of two sized boxes widgets/detailed_forecast.dart --DONE
+- Add full-test coverage 
+
 
 # Mobile App Development Class: Assignment Setup
 

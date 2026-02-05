@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 
 import 'package:weatherapp/providers/forecast_provider.dart';
 import 'package:weatherapp/providers/location_provider.dart';
-import 'package:weatherapp/widgets/weather_app_bar.dart';
-import 'package:weatherapp/widgets/weather_body.dart';
+import 'package:weatherapp/widgets/weather/weather_app_bar.dart';
+import 'package:weatherapp/widgets/weather/weather_body.dart';
 
 void main() {
   runApp(MultiProvider(providers: [

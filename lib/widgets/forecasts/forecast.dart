@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:weatherapp/widgets/detailed_forecast.dart';
-import 'package:weatherapp/widgets/forecasts.dart';
+import 'package:weatherapp/widgets/forecasts/detailed_forecast.dart';
+import 'package:weatherapp/widgets/forecasts/forecasts.dart';
 
 class ForecastWidget extends StatelessWidget {
   const ForecastWidget({super.key});

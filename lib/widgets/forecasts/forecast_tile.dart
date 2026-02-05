@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:weatherapp/providers/forecast_provider.dart';
 
-import '../models/forecast.dart';
+import '../../models/forecast.dart';
 
 class ForecastTileWidget extends StatelessWidget {
   const ForecastTileWidget({super.key, required this.forecast});
@@ -57,7 +57,7 @@ class ForecastTileWidget extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      SvgPicture.asset(forecast.imagePath, semanticsLabel: 'windy'),
+                      SvgPicture.asset(forecast.imagePath, semanticsLabel: forecast.imagePath.replaceAll(RegExp(r'.*/'), '')),
                       Text(
                         "${forecast.temperature}°",
                         style: theme.textTheme.displaySmall?.copyWith(

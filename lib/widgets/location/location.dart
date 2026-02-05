@@ -64,27 +64,21 @@ class _LocationWidgetState extends State<LocationWidget> {
               errorText: _showError ? "Error: Must Type Location" : null,
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
                     onPressed: _setLocation, child: Text("Set Location")),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
+                ElevatedButton(
                   onPressed: _locationActions.setLocationFromGps,
                   child: Text("GPS"),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
+                ElevatedButton(
                     onPressed: _clearLocation, child: Text("Clear Location")),
-              ),
-            ],
+              ],
+            ),
           ),
           // reactive text
           Text(
