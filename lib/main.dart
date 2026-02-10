@@ -66,6 +66,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     final locationProvider = context.watch<LocationProvider>();
     final forecastProvider = context.read<ForecastProvider>();
 
+    locationProvider.loadSavedLocations();
+
     if (locationProvider.location != null) {
       locationSet = true;
       forecastProvider.getForecasts(locationProvider.location);

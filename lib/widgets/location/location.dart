@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -75,12 +77,19 @@ class _LocationWidgetState extends State<LocationWidget> {
                 ? "${locationProvider.location?.city}, ${locationProvider.location!.state} ${locationProvider.location?.zip}"
                 : "No Location...",
           ),
-          SizedBox(height: 500, width: 500, child: ListView(scrollDirection: Axis.vertical, children: locationProvider.savedLocations.values.map((e)=>Text(e.zip)).toList()))
+          SizedBox(
+              height: 500,
+              width: 500,
+              child: ListView(
+                  scrollDirection: Axis.vertical,
+                  children: locationProvider.savedLocations.values
+                      .map((e) => Text(e.zip))
+                      .toList()))
         ],
       ),
     );
   }
 }
 
-// TODO: Display saved lcoations in the location widget
 
+//TODO: Display saved locations in the location widget
