@@ -27,12 +27,6 @@ class LocationDatabase {
     return LocationDatabase(db: db);
   }
 
-  void close() async {
-    await _db.close();
-  }
-
-
-
   Future<List<Location>> getLocations() async {
     String query = await rootBundle.loadString(sqlGetAllPath);
     List<Map> locationEntries = await _db.rawQuery(query);
@@ -43,7 +37,7 @@ class LocationDatabase {
     return locations;
   }
 
-  Future<void> insertLocation(Location location) async {
+  void insertLocation(Location location) async {
     await _db.transaction((txn) async {
       String query = await rootBundle.loadString(sqlInsertPath);
 
@@ -59,7 +53,7 @@ class LocationDatabase {
     });
   }
 
-  Future<void> deleteLocation(Location location) async {
+  void deleteLocation(Location location) async {
     await _db.transaction((txn) async {
       String query = await rootBundle.loadString(sqlDeletePath);
 

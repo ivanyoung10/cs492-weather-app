@@ -9,69 +9,64 @@ import 'package:path_provider/path_provider.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/location_database.dart';
+
 class LocationProvider extends ChangeNotifier {
   Location? location;
 
-  Map<String, Location> savedLocations = {};
+  List<Location> savedLocations = [];
 
-  void loadSavedLocations() async {
-    final directory = await getApplicationDocumentsDirectory();
+  LocationDatabase? _db;
 
-    final path = File('${directory.path}/savedLocations.json');
+  void openDatabase() async {
+    _db = await  LocationDatabase.open();
+    await loadSavedLocations();
+    loadSharedZip();
+  }
 
-    if (await path.exists()) {
-      final jsonString = await path.readAsString();
-      final jsonData = jsonDecode(jsonString);
-
-      for (int i = 0; i < jsonData["savedLocations"].length; i++) {
-        Map<String, dynamic> location = jsonData["savedLocations"][i];
-        savedLocations[location["zip"]] = Location.fromJson(location);
-      }
-    }
-
-    if (location == null && savedLocations.values.isNotEmpty) {
+  void loadSharedZip() async {
+    if (location == null && savedLocations.isNotEmpty){
       final prefs = SharedPreferencesAsync();
       String? savedZip = await prefs.getString("savedZip");
-      if (savedZip != null && savedLocations.containsKey(savedZip)) {
-        location = savedLocations[savedZip];
+      
+      for (int i = 0; i < savedLocations.length; i++){
+        if(savedLocations[i].zip == savedZip){
+          location = savedLocations[i];
+          notifyListeners();
+        }
       }
     }
+  }
 
+  Future<void> loadSavedLocations() async {
+    if(_db != null){{
+      savedLocations = (await _db?.getLocations())!;
+    }}
     notifyListeners();
   }
 
-  void deleteLocation(String zip) {
-    savedLocations.remove(zip);
-    storeSavedLocations();
-    notifyListeners();
+  void deleteLocation(Location loc) async {
+    if (_db != null){
+      await _db?.deleteLocation(loc);
+      loadSavedLocations();
+    }
   }
 
-  void storeSavedLocations() async {
-    final directory = await getApplicationDocumentsDirectory();
+  void storeSavedLocation(Location loc) async {
+    if (_db != null){
+      await _db?.insertLocation(loc);
+      loadSavedLocations();
+    }
 
-    final path = File('${directory.path}/savedLocations.json');
-
-    Map<String, dynamic> outputJson = {};
-
-    outputJson["savedLocations"] = savedLocations.values
-        .toList()
-        .map((location) => location.toJson())
-        .toList();
-
-    String outputString = jsonEncode(outputJson);
-
-    await path.writeAsString(outputString);
   }
 
   void setLocationFromGps() async {
     location = await getLocationFromGps();
 
-    if (location != null && !savedLocations.containsKey(location!.zip)) {
-      savedLocations[location!.zip] = location!;
+    if (location != null){
+      storeSavedLocation(location!);
     }
     saveZipToPrefs();
-    storeSavedLocations();
-    notifyListeners();
   }
 
   void setLocationFromString(String? locationString) async {
@@ -81,12 +76,10 @@ class LocationProvider extends ChangeNotifier {
       location = null;
     }
 
-    if (location != null && !savedLocations.containsKey(location!.zip)) {
-      savedLocations[location!.zip] = location!;
+    if (location != null) {
+      storeSavedLocation(location!);
     }
     saveZipToPrefs();
-    storeSavedLocations();
-    notifyListeners();
   }
 
   void setLocation(Location loc) {
