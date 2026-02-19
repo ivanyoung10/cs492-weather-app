@@ -35,21 +35,6 @@ class WeatherAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             )
           : Text(title),
-      // actions: [
-      //   Switch(value: themeProvider.darkMode,
-      //   onChanged: (value)=>{themeProvider.setDarkMode(value)}),
-      //   if (locationProvider.location != null)
-      //     Padding(
-      //       padding: const EdgeInsets.only(right: 16.0),
-      //       child: Text(
-      //         "${locationProvider.location!.city}, ${locationProvider.location!.state}",
-      //         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-      //               fontWeight: FontWeight.w500,
-      //               letterSpacing: 0.5,
-      //             ),
-      //       ),
-      //     ),
-      // ],
       bottom: TabBar(controller: _tabController, tabs: const [
         Tab(icon: Icon(Icons.sunny_snowing)),
         Tab(icon: Icon(Icons.location_pin)),

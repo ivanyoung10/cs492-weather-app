@@ -29,7 +29,7 @@ class LocationProvider extends ChangeNotifier {
       }
     }
   }
-
+  
   Future<void> loadSavedLocations() async {
     
     if (_db != null){
