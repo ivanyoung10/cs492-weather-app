@@ -60,14 +60,12 @@ class _DetailedForecastState extends State<DetailedForecast> {
     );
 
     final decodedResponse =
-        jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+        jsonDecode(utf8.decode(response.bodyBytes));
 
-    final photos = decodedResponse["photos"] as List?;
-    if (photos == null || photos.isEmpty) return null;
-
-    return photos[0]["src"]["original"] as String?;
+    final photos = decodedResponse["photos"];
+    return photos[0]["src"]["original"];
   } catch (e) {
-    print("_getImage exception: $e");
+    print("Image getter errors: $e");
     return null;
   } finally {
     client.close();
