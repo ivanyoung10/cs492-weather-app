@@ -74,7 +74,7 @@ class _LocationWidgetState extends State<LocationWidget> {
           Text(
             locationProvider.location != null
                 ? "${locationProvider.location?.city}, ${locationProvider.location?.state} ${locationProvider.location?.zip}"
-                : "No Location...",
+                : "No Location..",
           ),
           SizedBox(
               height: 500,
