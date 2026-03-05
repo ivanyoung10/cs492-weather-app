@@ -3,8 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:weatherapp/providers/forecast_provider.dart';
+import 'package:weatherapp/providers/theme_provider.dart';
 
-import '../../models/forecast.dart';
+import '../../../models/forecast.dart';
 
 class ForecastTileWidget extends StatelessWidget {
   const ForecastTileWidget({super.key, required this.forecast});
@@ -13,9 +14,10 @@ class ForecastTileWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<ThemeProvider>();
     final theme = Theme.of(context);
 
-    final accentColor = forecast.isDaytime ? Colors.orange : Colors.indigo;
+    final accentColor = forecast.isDaytime ? ThemeProvider().daytimeColor : ThemeProvider().nightColor;
 
     final semanticsString =
         "${forecast.name}, ${forecast.shortForecast}, ${forecast.detailedForecast}";

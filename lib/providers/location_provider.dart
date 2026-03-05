@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:weatherapp/models/location.dart';
+import 'package:weatherapp/models/locations/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/location_database.dart';
+import '../models/locations/location_database.dart';
 
 class LocationProvider extends ChangeNotifier {
   Location? location;

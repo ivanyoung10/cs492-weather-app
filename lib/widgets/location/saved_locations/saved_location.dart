@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:weatherapp/models/location.dart';
+import 'package:weatherapp/models/locations/location.dart';
 import 'package:weatherapp/providers/location_provider.dart';
+import 'package:weatherapp/providers/theme_provider.dart';
+import 'package:weatherapp/widgets/location/saved_locations/delete_location_button.dart';
 
 class SavedLocation extends StatelessWidget {
   const SavedLocation({
@@ -14,13 +16,13 @@ class SavedLocation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final locationProvider = context.watch<LocationProvider>();
-    void deleteLocation() {
-      locationProvider.deleteLocation(location);
-    }
+    final themeProvider = context.watch<ThemeProvider>();
 
     void setLocation() {
       locationProvider.setLocation(location);
     }
+
+
 
     return Card(
       elevation: 3,
@@ -51,22 +53,13 @@ class SavedLocation extends StatelessWidget {
                       "${location.state} ${location.zip}",
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.grey[600],
+                        color: themeProvider.greyColor,
                       ),
                     ),
                   ],
                 ),
               ),
-              Semantics(
-                label: "Delete Location Button for ${location.city}, ${location.state}.",
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.delete,
-                    color: Colors.redAccent,
-                  ),
-                  onPressed: deleteLocation,
-                ),
-              ),
+              DeleteLocationButton(location: location),
             ],
           ),
         ),
