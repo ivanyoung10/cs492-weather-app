@@ -56,14 +56,18 @@ class _LocationWidgetState extends State<LocationWidget> {
     final locationProvider = context.watch<LocationProvider>();
 
     return Padding(
-      padding: const EdgeInsets.all(12.0),
+      padding: const EdgeInsets.all(16.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextField(
             controller: _locationController,
             decoration: InputDecoration(
               labelText: "Enter Location",
-              errorText: _showError ? "Error: Must Type Location" : null,
+              hintText: "City, State or ZIP code",
+              errorText: _showError ? "Please enter a location" : null,
+              prefixIcon: const Icon(Icons.search),
+              border: const OutlineInputBorder(),
             ),
           ),
           LocationButtons(
@@ -71,15 +75,18 @@ class _LocationWidgetState extends State<LocationWidget> {
             setLocationFromGps: _locationActions.setLocationFromGps,
             clearLocation: _clearLocation,
           ),
-          Text(
-            locationProvider.location != null
-                ? "${locationProvider.location?.city}, ${locationProvider.location?.state} ${locationProvider.location?.zip}"
-                : "No Location...",
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
+            child: Text(
+              'SAVED LOCATIONS',
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    letterSpacing: 1.2,
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
           ),
-          SizedBox(
-              height: 500,
-              width: 500,
-              child: SavedLocations())
+          Expanded(child: SavedLocations()),
         ],
       ),
     );

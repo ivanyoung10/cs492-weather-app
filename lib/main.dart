@@ -4,25 +4,21 @@ import 'package:provider/provider.dart';
 import 'package:weatherapp/providers/forecast_provider.dart';
 import 'package:weatherapp/providers/location_provider.dart';
 import 'package:weatherapp/providers/theme_provider.dart';
+import 'package:weatherapp/widgets/weather_ui/color_picker.dart';
 import 'package:weatherapp/widgets/weather_ui/weather_app_bar.dart';
 import 'package:weatherapp/widgets/weather_ui/weather_body.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-// TODO:
-// Final refactoring of widgets
-// If it can have a name, it should be its own widget
+// TODAY'S GOALS:
+// Update the theme provider to add a seed color
+// Add a drawer
+// move the darkmode switch to the drawer
+// add a color picker to the drawer, which will allow the user to change the seed color
 
-void main() async {
-    WidgetsFlutterBinding.ensureInitialized(); // Ensure Flutter is initialized
-    try {
-      await dotenv.load(fileName: ".env"); // Load environment variables
-    } catch (e) {
-      throw Exception('Error loading .env file: $e'); // Print error if any
-    }
+void main() {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => LocationProvider()),
     ChangeNotifierProvider(create: (context) => ForecastProvider()),
-    ChangeNotifierProvider(create: (context) => ThemeProvider()),
+    ChangeNotifierProvider(create: (context) => ThemeProvider())
   ], child: const MyApp()));
 }
 
@@ -32,17 +28,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeProvider = context.watch<ThemeProvider>();
     return MaterialApp(
-      showSemanticsDebugger: false,
       title: 'CS492',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber, brightness: Brightness.light),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: themeProvider.daytimeColor, brightness: Brightness.light),
         useMaterial3: true,
       ),
       darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber, brightness: Brightness.dark),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: themeProvider.daytimeColor, brightness: Brightness.dark),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'CS492'),
+      home: const MyHomePage(title: 'Da Weather'),
       themeMode: themeProvider.darkMode ? ThemeMode.dark : ThemeMode.light,
     );
   }
@@ -96,7 +93,88 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: WeatherAppBar(title: widget.title, tabController: _tabController),
+      endDrawer: DrawerWidget(),
       body: WeatherAppBody(tabController: _tabController),
+    ); 
+  }
+}
+
+class DrawerWidget extends StatelessWidget {
+  const DrawerWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final themeProvider = context.watch<ThemeProvider>();
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          DrawerHeader(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  themeProvider.daytimeColor,
+                  themeProvider.daytimeColor.withValues(alpha: 0.6),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                const Icon(Icons.wb_sunny_rounded, color: Colors.white, size: 40),
+                const SizedBox(height: 8),
+                Text(
+                  'Da Weather',
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                Text(
+                  'Settings',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.white70,
+                      ),
+                ),
+              ],
+            ),
+          ),
+          ListTile(
+            leading: Icon(
+              themeProvider.darkMode ? Icons.dark_mode : Icons.light_mode,
+              color: colorScheme.primary,
+            ),
+            title: const Text('Dark Mode'),
+            trailing: Switch(
+              value: themeProvider.darkMode,
+              onChanged: themeProvider.setDarkMode,
+            ),
+          ),
+          const Divider(indent: 16, endIndent: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Text(
+              'THEME COLOR',
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                    letterSpacing: 1.2,
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: SeedColorPicker(),
+          ),
+        ],
+      ),
     );
   }
 }

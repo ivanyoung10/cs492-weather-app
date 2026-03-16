@@ -14,10 +14,10 @@ class ForecastTileWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.read<ThemeProvider>();
+    final themeProvider = context.watch<ThemeProvider>();
     final theme = Theme.of(context);
 
-    final accentColor = forecast.isDaytime ? ThemeProvider().daytimeColor : ThemeProvider().nightColor;
+    final accentColor = forecast.isDaytime ? themeProvider.daytimeColor : themeProvider.nightColor;
 
     final semanticsString =
         "${forecast.name}, ${forecast.shortForecast}, ${forecast.detailedForecast}";

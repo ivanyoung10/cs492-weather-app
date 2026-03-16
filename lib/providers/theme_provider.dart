@@ -5,7 +5,7 @@ class ThemeProvider extends ChangeNotifier {
 
   bool darkMode = false;
 
-  final Color daytimeColor = Colors.orange;
+  Color daytimeColor = Colors.orange;
   final Color nightColor = Colors.indigo;
   final Color dangerColor = Colors.redAccent;
   final Color greyColor = Colors.grey[600] ?? Colors.grey;
@@ -24,5 +24,10 @@ class ThemeProvider extends ChangeNotifier {
     notifyListeners();
     final prefs = SharedPreferencesAsync();
     await prefs.setBool("darkMode", mode);
+  }
+
+  void setDaytimeColor(Color color) {
+    daytimeColor = color;
+    notifyListeners();
   }
 }
